@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {calculate} from '../calc.js';
+const near=(x,y)=>assert.ok(Math.abs(x-y)<1e-7,`${x} != ${y}`);
+const base={cost:120,price:240,commission:10,shipping:10,packaging:0,other:0,ads:0,discount:0,target:0,targetMargin:20,tax:0,taxEnabled:false,vatEnabled:true,purchaseVat:20,salesVat:20,purchaseVatIncluded:true,salesVatIncluded:true,commissionBase:'gross'};
+test('VAT inclusive price: correct input/output VAT and profit',()=>{const r=calculate(base).result;near(r.netRevenue,200);near(r.purchaseVatAmount,20);near(r.salesVatAmount,40);near(r.vatPayable,20);near(r.commissionAmount,24);near(r.fixed,110);near(r.profit,66);near(r.margin,33);});
+test('VAT exclusive sale: VAT is outside sales quote',()=>{const r=calculate({...base,price:200,salesVatIncluded:false}).result;near(r.salesVatAmount,40);near(r.netRevenue,200);near(r.profit,70);});
+test('VAT net commission matrah',()=>{const r=calculate({...base,commissionBase:'vatNet'}).result;near(r.commissionAmount,20);near(r.profit,70);});
+test('VAT break even',()=>{const r=calculate(base).result;const again=calculate({...base,price:r.breakEven}).result;near(again.profit,0);});
+test('VAT target amount',()=>{const r=calculate({...base,target:50}).result;near(calculate({...base,price:r.targetPrice}).result.profit,50);});
+test('target margin calculated on VAT-exclusive revenue',()=>{const r=calculate(base).result;near(calculate({...base,price:r.targetMarginPrice}).result.margin,20);});
+test('VAT off leaves reference example unchanged',()=>{const r=calculate({cost:200,price:500,commission:10,shipping:40,packaging:10}).result;near(r.profit,200);near(r.breakEven,250/.9);});
+test('input VAT separated when purchase price VAT exclusive',()=>{const r=calculate({...base,cost:100,purchaseVatIncluded:false}).result;near(r.fixed,110);near(r.purchaseVatAmount,20);});
+test('invalid VAT rate rejected',()=>{assert.equal(calculate({...base,salesVat:101}).valid,false);});
+test('100% target margin can be impossible',()=>{assert.equal(calculate({...base,targetMargin:100}).result.targetMarginPrice,null);});

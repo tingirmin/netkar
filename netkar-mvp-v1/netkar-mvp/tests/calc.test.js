@@ -1,0 +1,18 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {calculate,parseNumber} from '../calc.js';
+const x={cost:200,price:500,commission:10,shipping:40,packaging:10,other:0,ads:0,discount:0,target:200,tax:0,taxEnabled:false,commissionBase:'gross'};
+const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-7,`${a} != ${b}`);
+test('reference example',()=>{const r=calculate(x).result;near(r.profit,200);near(r.margin,40);near(r.breakEven,250/.9);near(r.expenses,300);});
+test('zero values',()=>{const r=calculate({...x,cost:0,price:0,commission:0,shipping:0,packaging:0,target:0}).result;near(r.profit,0);assert.equal(r.margin,null);assert.equal(r.roi,null);});
+test('negative rejected',()=>assert.equal(calculate({...x,cost:-1}).valid,false));
+test('empty fields treated as zero',()=>near(calculate({...x,ads:'',other:''}).result.profit,200));
+test('invalid inputs rejected',()=>{for(const value of ['abc','Infinity','1e10','-2'])assert.equal(calculate({...x,price:value}).valid,false);});
+test('decimal commas',()=>near(calculate({...x,price:'500,50'}).result.profit,200.45));
+test('large values',()=>assert.ok(Number.isFinite(calculate({...x,cost:1e12,price:1e12}).result.profit)));
+test('tax disabled is ignored',()=>near(calculate({...x,tax:20}).result.profit,200));
+test('sales levy',()=>{const r=calculate({...x,tax:10,taxEnabled:true}).result;near(r.taxAmount,50);near(r.profit,150);near(r.breakEven,312.5);});
+test('commission after levy',()=>near(calculate({...x,tax:10,taxEnabled:true,commissionBase:'afterTax'}).result.commissionAmount,45));
+test('discount and target list price',()=>{const r=calculate({...x,discount:20}).result;near(r.profit,110);near(r.requiredListPrice,625);});
+test('100% commission has no break even',()=>assert.equal(calculate({...x,commission:100}).result.breakEven,null));
+test('100% discount has no list price',()=>assert.equal(calculate({...x,discount:100}).result.requiredListPrice,null));
+test('out of range percent rejected',()=>assert.equal(calculate({...x,commission:101}).valid,false));
+test('locale parsing',()=>{near(parseNumber('1.234,56'),1234.56);near(parseNumber('1,234.56'),1234.56);});

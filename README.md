@@ -1,22 +1,15 @@
-# NetKâr v1.1
+# NetKâr v1.2 — sade kullanıcı arayüzü
 
-Static bilingual profit calculator. No external runtime dependencies. Open via a local HTTP server.
+Temel girişler: alış, satış, komisyon, kargo. Ek maliyetler, KDV, vergi, hedef fiyat ve komisyon matrahı **Gelişmiş seçenekler** içinde yer alır. Hesaplama ve kayıt fonksiyonları v1.1 ile aynıdır. İleri seçenekler kapalıyken de hesaplamaya uygulanmaya devam eder; etkin özellikler kullanıcıya ayrıca bildirilir.
 
-## Windows
-In this folder run `py -m http.server 8000` then visit http://localhost:8000 .
+## Windows'ta çalıştırma
 
-## Tests
-Install Node.js 22+, run `npm test` or `node --test tests/*.test.js`.
+Klasörde `py -m http.server 8000` çalıştırın. Tarayıcıda `http://localhost:8000/` açın. Testler için Node.js 20+ ile `npm test` çalıştırın.
 
-## Publishing
-Upload **contents of this folder**, not the folder itself, to GitHub repository root and commit. Files with the same name should replace their predecessors. Keep your existing Google Search Console verification `.html` file (not included in this release); never delete it.
+## GitHub Pages
 
-## Model
-- With VAT disabled, legacy optional sales levy remains available.
-- VAT-enabled: purchase and selling VAT are modeled separately; purchase input VAT is assumed recoverable; additional shipping/packaging/advertising/other costs are entered at full expense and never assumed to carry recoverable VAT.
-- Price fields are VAT-inclusive or VAT-exclusive as selected independently. In VAT-exclusive sale mode, output VAT is added outside the quoted sale price and does not reduce profit.
-- Commission on gross quoted sale or on VAT-exclusive sale as selected.
-- Margin uses VAT-exclusive sale revenue when VAT is enabled.
-- Other charges, marketplace commission VAT and tax settlement timing are not modeled. VAT difference is informative, not an added operating expense.
-- All calculations are estimates; consult an accountant before using for tax declarations.
-- Changing currency changes symbol, does not convert amounts. Product data stays in browser localStorage. No subscription/paywall is implemented.
+ZIP içindeki dosyaları `netkar` deposunun **kök dizinine** yükleyin (klasörün kendisini yüklemeyin). Önemli: Önceden GitHub'da oluşturduğunuz `google94d79837ccbeecbd.html` doğrulama dosyası korunmalıdır. Yayın adresi `https://tingirmin.github.io/netkar/`.
+
+## Sınırlar
+
+Ürün kayıtları yalnızca kullanılan tarayıcıdaki localStorage'da tutulur; veriler cihazlar arasında eşitlenmez. Para birimi değiştirmek fiyat dönüştürmez. KDV modeli tüm özel vergi ve muhasebe durumlarını kapsamaz. PDF/abonelik bulunmaz. Mobil otomatik doğrulama ortam koşullarına göre sınırlı olabilir.

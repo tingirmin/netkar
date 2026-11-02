@@ -9,6 +9,7 @@ function pct(n){return Number.isFinite(n)?new Intl.NumberFormat(lang==='tr'?'tr-
 function input(){return {...Object.fromEntries(FIELD_NAMES.map(k=>[k,$(k).value])),taxEnabled:$('taxEnabled').checked,vatEnabled:$('vatEnabled').checked,purchaseVatIncluded:$('purchaseVatIncluded').checked,salesVatIncluded:$('salesVatIncluded').checked,commissionBase:$('commissionBase').value};}
 function update(){
  $('taxEnabled').disabled=$('vatEnabled').checked; $('vatFields').hidden=!$('vatEnabled').checked; $('taxFields').hidden=!$('taxEnabled').checked||$('vatEnabled').checked;
+ const active=[];if($('vatEnabled').checked)active.push(t('vatShort'));if($('taxEnabled').checked)active.push(t('taxShort'));if(Number($('discount').value)>0)active.push(t('discountShort'));if($('commissionBase').value!=='gross')active.push(t('customBaseShort'));$('advancedIndicator').textContent=active.length?t('advancedActive')+active.join(' · '):'';
  const {valid,result:r}=calculate(input());$('errors').textContent=valid?'':t('invalid');$('save').disabled=!valid;
  for(const el of document.querySelectorAll('.unit'))if(el.textContent!=='%')el.textContent={TRY:'₺',USD:'$',EUR:'€'}[currency];
  for(const [key,n] of Object.entries({profit:r?.profit,breakEven:r?.breakEven,targetPrice:r?.targetPrice,effectivePrice:r?.effectivePrice,fixed:r?.fixed,commissionValue:r?.commissionAmount,taxValue:r?.taxAmount,expenses:r?.expenses,targetMarginPrice:r?.targetMarginPrice,salesVatValue:r?.salesVatAmount,purchaseVatValue:r?.purchaseVatAmount,vatPayable:r?.vatPayable}))$(key).textContent=money(n);

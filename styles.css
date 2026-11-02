@@ -2,3 +2,11 @@
 
 /* v1.1 VAT panel */
 .vat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}.vat-grid input:not([type=checkbox]){width:100%;box-sizing:border-box;border:1px solid #d7e2df;padding:12px;border-radius:10px;background:var(--surface,#fff);color:inherit}.vat-grid .checklabel{font-size:13px}#vatBreakdown>div{display:flex;justify-content:space-between;padding:7px 0;gap:10px}#vatBreakdown strong{text-align:right}@media(max-width:420px){.vat-grid{grid-template-columns:1fr}}
+
+/* v1.2: progressive disclosure; no additional third-party assets */
+.advanced-toggle,.results-extra,.simulation-toggle{min-width:0;border:1px solid var(--border,#dce7df);border-radius:12px;background:var(--soft,#f2f8f4)}
+.advanced-toggle{margin-top:4px}.advanced-toggle summary,.results-extra summary,.simulation-toggle summary{padding:14px 16px;color:#0b8754;font-weight:750;font-size:14px;cursor:pointer;list-style-position:inside}
+.advanced-toggle summary:focus-visible,.results-extra summary:focus-visible,.simulation-toggle summary:focus-visible{outline:3px solid #51bc91;outline-offset:2px}
+.advanced-fields{padding:4px 15px 16px}.advanced-indicator{margin:0;font-size:12px;color:#65796b}.advanced-indicator:empty{display:none}
+.results-extra{margin-top:14px}.extra-stats{margin:0;padding:0 12px 14px}.results-extra>.help{padding:0 14px}.results-extra .bar-title,.results-extra .bar,.results-extra .breakdown{margin-left:14px;margin-right:14px}.results-extra .breakdown{padding-bottom:12px}.simulation-toggle #comparison{padding:0 14px 14px}.sim-panel{padding:17px 20px}.sim-panel .kicker{margin-bottom:12px}
+@media(max-width:790px){.hero{padding-top:25px}.hero h1{font-size:32px}.profitcard strong{font-size:35px}.form-panel .panel h2{margin-bottom:12px}}
